@@ -5,8 +5,7 @@
     ? parseInt(localStorage.getItem('fitnessLevel') || '3')
     : 3;
 
-  const diff = Math.abs(fitnessLevel - data.tour.fitnessLevel);
-  const match = Math.max(0, 100 - diff * 20);
+  const match = $derived(Math.max(0, 100 - Math.abs(fitnessLevel - data.tour.fitnessLevel) * 20));
 
   let gestartet = $state(false);
 
