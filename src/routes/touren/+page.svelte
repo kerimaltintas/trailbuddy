@@ -1,15 +1,14 @@
 <script lang="ts">
   let { data } = $props();
-  
-  let alleTouren = data.touren;
+
   let aktiveSchwierigkeit = $state('Alle');
   let aktiveRegion = $state('Alle');
 
   const schwierigkeiten = ['Alle', 'Einfach', 'Mittel', 'Schwer'];
-  const regionen = ['Alle', ...new Set(alleTouren.map((t: any) => t.region))];
+  const regionen = $derived(['Alle', ...new Set(data.touren.map((t: any) => t.region))]);
 
   let gefilterteTouren = $derived(
-    alleTouren.filter((t: any) => {
+    data.touren.filter((t: any) => {
       const schwierigkeitOk = aktiveSchwierigkeit === 'Alle' || t.schwierigkeit === aktiveSchwierigkeit;
       const regionOk = aktiveRegion === 'Alle' || t.region === aktiveRegion;
       return schwierigkeitOk && regionOk;

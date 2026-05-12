@@ -1,10 +1,9 @@
 <script lang="ts">
   let { data } = $props();
-  let touren = data.touren;
 
   let fitnessLevel = $state(
-    typeof localStorage !== 'undefined' 
-      ? parseInt(localStorage.getItem('fitnessLevel') || '3') 
+    typeof localStorage !== 'undefined'
+      ? parseInt(localStorage.getItem('fitnessLevel') || '3')
       : 3
   );
 
@@ -23,10 +22,10 @@
 
 <div class="fitness-box">
   <p class="box-label">Dein Fitnessstand</p>
-  <input 
-    type="range" 
-    min="1" 
-    max="5" 
+  <input
+    type="range"
+    min="1"
+    max="5"
     value={fitnessLevel}
     oninput={fitnessAendern}
     class="slider"
@@ -43,7 +42,7 @@
   <a href="/touren">Alle anzeigen →</a>
 </div>
 
-{#each touren as tour}
+{#each data.touren as tour}
   <a href="/touren/{tour._id}">
     <div class="tour-card">
       <h3>{tour.name}</h3>

@@ -1,10 +1,11 @@
 <script lang="ts">
   let { data } = $props();
-  let tour = data.tour;
 
-  // Fitness-Match berechnen
-  const fitnessLevel = parseInt(localStorage.getItem('fitnessLevel') || '3');
-  const diff = Math.abs(fitnessLevel - tour.fitnessLevel);
+  const fitnessLevel = typeof localStorage !== 'undefined'
+    ? parseInt(localStorage.getItem('fitnessLevel') || '3')
+    : 3;
+
+  const diff = Math.abs(fitnessLevel - data.tour.fitnessLevel);
   const match = Math.max(0, 100 - diff * 20);
 
   let gestartet = $state(false);
@@ -17,25 +18,25 @@
 <a href="/touren" class="back">← Zurück</a>
 
 <div class="detail">
-  <h1>{tour.name}</h1>
-  <p class="region">📍 {tour.region}</p>
+  <h1>{data.tour.name}</h1>
+  <p class="region">📍 {data.tour.region}</p>
 
   <div class="stats">
     <div class="stat">
       <span class="label">Dauer</span>
-      <span class="value">⏱ {tour.dauer} Min</span>
+      <span class="value">⏱ {data.tour.dauer} Min</span>
     </div>
     <div class="stat">
       <span class="label">Distanz</span>
-      <span class="value">📏 {tour.distanz} km</span>
+      <span class="value">📏 {data.tour.distanz} km</span>
     </div>
     <div class="stat">
       <span class="label">Höhenmeter</span>
-      <span class="value">🏔 {tour.hoehenmeter} hm</span>
+      <span class="value">🏔 {data.tour.hoehenmeter} hm</span>
     </div>
     <div class="stat">
       <span class="label">Schwierigkeit</span>
-      <span class="value">{tour.schwierigkeit}</span>
+      <span class="value">{data.tour.schwierigkeit}</span>
     </div>
   </div>
 
@@ -47,7 +48,7 @@
     <p class="match-percent">{match}% passend für dein Level</p>
   </div>
 
-  <p class="beschreibung">{tour.beschreibung}</p>
+  <p class="beschreibung">{data.tour.beschreibung}</p>
 
   {#if gestartet}
     <div class="success">
