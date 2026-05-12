@@ -1,11 +1,18 @@
-<script lang="ts">
-	import favicon from '$lib/assets/favicon.svg';
-
-	let { children } = $props();
+<script>
+  import BottomNav from '$lib/components/BottomNav.svelte';
 </script>
 
-<svelte:head>
-	<link rel="icon" href={favicon} />
-</svelte:head>
+<main>
+  <slot />
+</main>
 
-{@render children()}
+<BottomNav />
+
+<style>
+  main {
+    padding: 16px;
+    padding-bottom: 80px; /* Platz für BottomNav */
+    max-width: 430px;     /* Mobile-Breite */
+    margin: 0 auto;
+  }
+</style>
