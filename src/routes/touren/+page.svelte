@@ -16,14 +16,16 @@
   );
 </script>
 
+<div style="padding-bottom: 70px">
+
 <h1>🥾 Touren finden</h1>
 
 <div class="filter-section">
   <p class="filter-label">Schwierigkeit</p>
   <div class="chips">
     {#each schwierigkeiten as s}
-      <button 
-        class="chip" 
+      <button
+        class="chip"
         class:aktiv={aktiveSchwierigkeit === s}
         onclick={() => aktiveSchwierigkeit = s}
       >
@@ -35,8 +37,8 @@
   <p class="filter-label">Region</p>
   <div class="chips">
     {#each regionen as r}
-      <button 
-        class="chip" 
+      <button
+        class="chip"
         class:aktiv={aktiveRegion === r}
         onclick={() => aktiveRegion = r}
       >
@@ -61,6 +63,15 @@
     </a>
   {/each}
 {/if}
+
+</div>
+
+<nav class="bottom-nav">
+  <a href="/">🏠<span>Home</span></a>
+  <a href="/touren" class="active">🔍<span>Suche</span></a>
+  <a href="/tagebuch">📔<span>Tagebuch</span></a>
+  <a href="/profil">👤<span>Profil</span></a>
+</nav>
 
 <style>
   .filter-section {
@@ -137,4 +148,27 @@
     border-radius: 20px;
     font-size: 12px;
   }
+
+  .bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    display: flex;
+    background: white;
+    border-top: 1px solid #eee;
+    z-index: 100;
+  }
+
+  .bottom-nav a {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.6rem 0;
+    text-decoration: none;
+    color: #888;
+    font-size: 0.7rem;
+    gap: 2px;
+  }
+
+  .bottom-nav a.active { color: #2d6a4f; font-weight: 600; }
 </style>
