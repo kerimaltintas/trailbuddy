@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
+
   const personas = [
     { id: 'familie', label: 'Familie', emoji: '👨‍👩‍👧', beschreibung: 'Gemütliche Touren für alle' },
     { id: 'aktiv', label: 'Aktiv', emoji: '🏃', beschreibung: 'Sportliche Herausforderungen' },
@@ -6,19 +8,43 @@
     { id: 'senior', label: 'Senior', emoji: '🧓', beschreibung: 'Ruhige & sichere Wege' },
   ];
 
-  let aktivePersona = $state(
-    typeof localStorage !== 'undefined'
-      ? localStorage.getItem('persona') || ''
-      : ''
-  );
-
+  let aktivePersona = $state('');
   let gespeichert = $state(false);
 
-  function personaWaehlen(id: string) {
+  // Eindeutige Browser-ID holen oder erstellen
+  function getBrowserId(): string {
+    let id = localStorage.getItem('trailbuddy_user_id');
+    if (!id) {
+      id = 'user_' + crypto.randomUUID();
+      localStorage.setItem('trailbuddy_user_id', id);
+    }
+    return id;
+  }
+
+  onMount(async () => {
+    const userId = getBrowserId();
+    const res = await fetch(`/api/profil?userId=${userId}`);
+    if (res.ok) {
+      const data = await res.json();
+      if (data.persona) aktivePersona = data.persona;
+    }
+  });
+
+  async function personaWaehlen(id: string) {
     aktivePersona = id;
-    localStorage.setItem('persona', id);
-    gespeichert = true;
-    setTimeout(() => gespeichert = false, 2000);
+    gespeichert = false;
+
+    const userId = getBrowserId();
+    const res = await fetch('/api/profil', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ persona: id, fitnessLevel: 2, userId })
+    });
+
+    if (res.ok) {
+      gespeichert = true;
+      setTimeout(() => (gespeichert = false), 2000);
+    }
   }
 </script>
 
@@ -26,10 +52,9 @@
 
 <div class="section">
   <p class="section-label">Wähle deine Persona</p>
-
   <div class="personas">
     {#each personas as persona}
-      <button 
+      <button
         class="persona-card"
         class:aktiv={aktivePersona === persona.id}
         onclick={() => personaWaehlen(persona.id)}
@@ -48,7 +73,6 @@
 
 <div class="section">
   <p class="section-label">Fitness-Apps verbinden</p>
-
   <div class="app-list">
     <div class="app-item">
       <span>🍎 Apple Health</span>
@@ -66,15 +90,11 @@
 </div>
 
 <div class="section">
-  <a href="/touren" class="touren-btn">
-    🥾 Passende Touren anzeigen
-  </a>
+  <a href="/touren" class="touren-btn">🥾 Passende Touren anzeigen</a>
 </div>
 
 <style>
-  h1 {
-    margin-bottom: 24px;
-  }
+  h1 { margin-bottom: 24px; }
 
   .section {
     background: white;
@@ -114,19 +134,9 @@
     background: #d8f3dc;
   }
 
-  .emoji {
-    font-size: 28px;
-  }
-
-  .persona-label {
-    font-weight: 600;
-    font-size: 14px;
-  }
-
-  .persona-desc {
-    font-size: 11px;
-    color: #666;
-  }
+  .emoji { font-size: 28px; }
+  .persona-label { font-weight: 600; font-size: 14px; }
+  .persona-desc { font-size: 11px; color: #666; }
 
   .success {
     background: #d8f3dc;
@@ -138,11 +148,7 @@
     text-align: center;
   }
 
-  .app-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
+  .app-list { display: flex; flex-direction: column; gap: 12px; }
 
   .app-item {
     display: flex;
@@ -160,10 +166,7 @@
     font-size: 13px;
   }
 
-  .connect-btn:hover {
-    background: #2d6a4f;
-    color: white;
-  }
+  .connect-btn:hover { background: #2d6a4f; color: white; }
 
   .touren-btn {
     display: block;

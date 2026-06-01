@@ -7,10 +7,32 @@
 
   const match = $derived(Math.max(0, 100 - Math.abs(fitnessLevel - data.tour.fitnessLevel) * 20));
 
-  let gestartet = $state(false);
+  // Tagebuch-Formular
+  let showForm = $state(false);
+  let bewertung = $state(3);
+  let notiz = $state('');
+  let datum = $state(new Date().toISOString().split('T')[0]);
+  let gespeichert = $state(false);
+  let laden = $state(false);
 
-  function tourStarten() {
-    gestartet = true;
+  async function eintragSpeichern() {
+    laden = true;
+    const res = await fetch('/api/eintraege', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        tourName: data.tour.name,
+        tourId: data.tour._id,
+        datum,
+        notiz,
+        bewertung
+      })
+    });
+    laden = false;
+    if (res.ok) {
+      gespeichert = true;
+      showForm = false;
+    }
   }
 </script>
 
@@ -49,13 +71,46 @@
 
   <p class="beschreibung">{data.tour.beschreibung}</p>
 
-  {#if gestartet}
+ {#if gespeichert}
     <div class="success">
-      ✅ Tour wurde gestartet! Viel Spass auf dem Weg!
+      ✅ Tour im Tagebuch gespeichert!
+    </div>
+  {:else if showForm}
+    <div class="tagebuch-form">
+      <h3>Tour festhalten</h3>
+
+      <label>
+        Datum
+        <input type="date" bind:value={datum} />
+      </label>
+
+      <label>
+        Bewertung
+        <div class="sterne">
+          {#each [1,2,3,4,5] as n}
+            <button
+              class="stern {bewertung >= n ? 'aktiv' : ''}"
+              onclick={() => bewertung = n}
+            >★</button>
+          {/each}
+        </div>
+      </label>
+
+      <label>
+        Notiz (optional)
+        <textarea bind:value={notiz} rows="2" placeholder="Wie war die Tour?"></textarea>
+      </label>
+
+      <div class="form-buttons">
+        <button onclick={() => showForm = false} class="btn-abbrechen">Abbrechen</button>
+        <button onclick={eintragSpeichern} class="btn-speichern" disabled={laden}>
+          {laden ? 'Speichert…' : '💾 Speichern'}
+        </button>
+      </div>
     </div>
   {:else}
-    <button onclick={tourStarten} class="start-btn">
-      🚀 Tour starten
+    <button onclick={() => showForm = true} class="start-btn">
+      ✓ Tour als erledigt markieren
     </button>
   {/if}
 </div>
@@ -176,4 +231,79 @@
     text-align: center;
     font-weight: 600;
   }
+
+  .tagebuch-form {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    padding: 16px;
+  }
+
+  .tagebuch-form h3 {
+    margin: 0 0 12px;
+    font-size: 1rem;
+    color: #2d6a4f;
+  }
+
+  .tagebuch-form label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 10px;
+  }
+
+  .tagebuch-form input[type="date"],
+  .tagebuch-form textarea {
+    display: block;
+    width: 100%;
+    padding: 8px;
+    margin-top: 4px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    box-sizing: border-box;
+    font-family: inherit;
+  }
+
+  .sterne { display: flex; gap: 4px; margin-top: 4px; }
+  .stern {
+    background: none;
+    border: none;
+    font-size: 1.6rem;
+    cursor: pointer;
+    color: #dee2e6;
+    padding: 0;
+  }
+  .stern.aktiv { color: #f4a261; }
+
+  .form-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .btn-abbrechen {
+    flex: 1;
+    padding: 10px;
+    background: none;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+
+  .btn-speichern {
+    flex: 2;
+    padding: 10px;
+    background: #2d6a4f;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .btn-speichern:disabled { background: #aaa; }
 </style>
