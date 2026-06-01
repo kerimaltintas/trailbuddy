@@ -11,7 +11,6 @@
   let aktivePersona = $state('');
   let gespeichert = $state(false);
 
-  // Eindeutige Browser-ID holen oder erstellen
   function getBrowserId(): string {
     let id = localStorage.getItem('trailbuddy_user_id');
     if (!id) {
@@ -33,14 +32,12 @@
   async function personaWaehlen(id: string) {
     aktivePersona = id;
     gespeichert = false;
-
     const userId = getBrowserId();
     const res = await fetch('/api/profil', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ persona: id, fitnessLevel: 2, userId })
     });
-
     if (res.ok) {
       gespeichert = true;
       setTimeout(() => (gespeichert = false), 2000);
@@ -73,18 +70,19 @@
 
 <div class="section">
   <p class="section-label">Fitness-Apps verbinden</p>
+  <p class="coming-soon-text">🚧 In einer zukünftigen Version verfügbar</p>
   <div class="app-list">
     <div class="app-item">
       <span>🍎 Apple Health</span>
-      <button class="connect-btn">Verbinden</button>
+      <button class="connect-btn" disabled>Bald verfügbar</button>
     </div>
     <div class="app-item">
       <span>🟠 Strava</span>
-      <button class="connect-btn">Verbinden</button>
+      <button class="connect-btn" disabled>Bald verfügbar</button>
     </div>
     <div class="app-item">
       <span>⌚ Garmin</span>
-      <button class="connect-btn">Verbinden</button>
+      <button class="connect-btn" disabled>Bald verfügbar</button>
     </div>
   </div>
 </div>
@@ -92,6 +90,13 @@
 <div class="section">
   <a href="/touren" class="touren-btn">🥾 Passende Touren anzeigen</a>
 </div>
+
+<nav class="bottom-nav">
+  <a href="/">🏠<span>Home</span></a>
+  <a href="/touren">🔍<span>Suche</span></a>
+  <a href="/tagebuch">📔<span>Tagebuch</span></a>
+  <a href="/profil" class="active">👤<span>Profil</span></a>
+</nav>
 
 <style>
   h1 { margin-bottom: 24px; }
@@ -179,4 +184,39 @@
     font-weight: 600;
     font-size: 16px;
   }
+
+  .bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    display: flex;
+    background: white;
+    border-top: 1px solid #eee;
+    z-index: 100;
+  }
+
+  .bottom-nav a {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.6rem 0;
+    text-decoration: none;
+    color: #888;
+    font-size: 0.7rem;
+    gap: 2px;
+  }
+
+  .coming-soon-text {
+    font-size: 12px;
+    color: #999;
+    margin: 0 0 12px 0;
+  }
+
+  .connect-btn:disabled {
+    background: #f0f0f0;
+    color: #bbb;
+    cursor: not-allowed;
+  }
+
+  .bottom-nav a.active { color: #2d6a4f; font-weight: 600; }
 </style>

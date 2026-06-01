@@ -1,18 +1,32 @@
-<script>
-  import BottomNav from '$lib/components/BottomNav.svelte';
+<script lang="ts">
 </script>
 
-<main>
-  <slot />
-</main>
-
-<BottomNav />
+<div class="app-shell">
+  <main>
+    <slot />
+  </main>
+</div>
 
 <style>
+  :global(body) {
+    margin: 0;
+    padding: 0;
+    background: #f0f4f0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    min-height: 100vh;
+  }
+
+  .app-shell {
+    min-height: 100vh;
+    background:
+      radial-gradient(ellipse at top left, #d8f3dc 0%, transparent 50%),
+      radial-gradient(ellipse at bottom right, #b7e4c7 0%, transparent 50%),
+      #f0f4f0;
+  }
+
   main {
-    padding: 16px;
-    padding-bottom: 80px; /* Platz für BottomNav */
-    max-width: 430px;     /* Mobile-Breite */
+    padding: 24px 16px 80px;
+    max-width: 430px;
     margin: 0 auto;
   }
 </style>
