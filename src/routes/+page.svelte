@@ -69,7 +69,6 @@
   const letzteTouren = $derived(data.touren.slice(0, 3));
 </script>
 
-<!-- Onboarding-Banner -->
 {#if !profilEingerichtet && !ueberspringen}
   <div class="onboarding-banner">
     <div class="onboarding-icon">🥾</div>
@@ -80,7 +79,6 @@
   </div>
 
 {:else}
-  <!-- Normaler Home-Screen -->
   <div class="header">
     {#if persona}
     <h1>👋 Willkommen!</h1>
@@ -92,7 +90,6 @@
   </div>
 
   {#if persona}
-    <!-- Passende Touren basierend auf Persona -->
     <div class="section-header">
       <h2>Passende Touren</h2>
       <a href="/touren">Alle anzeigen →</a>
@@ -107,7 +104,6 @@
       </a>
     {/each}
   {:else}
-    <!-- Keine Persona: alle Touren -->
     <div class="section-header">
       <h2>Zuletzt hinzugefügt</h2>
       <a href="/touren">Alle anzeigen →</a>
@@ -132,7 +128,6 @@
 </nav>
 
 <style>
-  /* Onboarding */
   .onboarding-banner {
     text-align: center;
     padding: 2rem 1rem;
@@ -181,12 +176,10 @@
     text-decoration: underline;
   }
 
-  /* Header */
   .header { margin-bottom: 24px; }
   h1 { margin: 0 0 4px 0; font-size: 24px; }
   .subtitle { margin: 0; color: #666; font-size: 0.9rem; }
 
-  /* Touren */
   .section-header {
     display: flex;
     justify-content: space-between;
@@ -219,7 +212,6 @@
     font-size: 12px;
   }
 
-  /* Bottom Nav */
   .bottom-nav {
     position: fixed;
     bottom: 0; left: 0; right: 0;

@@ -72,6 +72,16 @@
 
     <p class="beschreibung">{data.tour.beschreibung}</p>
 
+    {#if data.tour.saison}
+      <div class="saison-box">
+        <span class="saison-icon">📅</span>
+        <div>
+          <p class="saison-label">Empfohlene Saison</p>
+          <p class="saison-wert">{data.tour.saison}</p>
+        </div>
+      </div>
+    {/if}
+
     {#if gespeichert}
       <div class="success">
         ✅ Tour im Tagebuch gespeichert!
@@ -192,7 +202,34 @@
   }
 
   .match-percent { margin: 0; font-size: 13px; color: #2d6a4f; }
-  .beschreibung { color: #444; line-height: 1.6; margin-bottom: 24px; }
+  .beschreibung { color: #444; line-height: 1.6; margin-bottom: 20px; }
+
+  .saison-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #fff8e1;
+    border: 1px solid #ffe082;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+  }
+
+  .saison-icon { font-size: 1.5rem; }
+
+  .saison-label {
+    font-size: 11px;
+    color: #999;
+    text-transform: uppercase;
+    margin: 0 0 2px;
+  }
+
+  .saison-wert {
+    font-size: 15px;
+    font-weight: 600;
+    color: #f57f17;
+    margin: 0;
+  }
 
   .start-btn {
     width: 100%;
