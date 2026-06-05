@@ -3,15 +3,22 @@
 
   let aktiveSchwierigkeit = $state('Alle');
   let aktiveRegion = $state('Alle');
+  let aktiveDauer = $state('Alle');
 
   const schwierigkeiten = ['Alle', 'Einfach', 'Mittel', 'Schwer'];
   const regionen = $derived(['Alle', ...new Set(data.touren.map((t: any) => t.region))]);
+  const dauern = ['Alle', '1–2h', '2–4h', '4h+'];
 
   let gefilterteTouren = $derived(
     data.touren.filter((t: any) => {
       const schwierigkeitOk = aktiveSchwierigkeit === 'Alle' || t.schwierigkeit === aktiveSchwierigkeit;
       const regionOk = aktiveRegion === 'Alle' || t.region === aktiveRegion;
-      return schwierigkeitOk && regionOk;
+      const dauerOk =
+        aktiveDauer === 'Alle' ||
+        (aktiveDauer === '1–2h' && t.dauer > 60 && t.dauer <= 120) ||
+        (aktiveDauer === '2–4h' && t.dauer > 120 && t.dauer <= 240) ||
+        (aktiveDauer === '4h+' && t.dauer > 240);
+      return schwierigkeitOk && regionOk && dauerOk;
     })
   );
 </script>
@@ -34,6 +41,19 @@
     {/each}
   </div>
 
+  <p class="filter-label">Dauer</p>
+  <div class="chips">
+    {#each dauern as d}
+      <button
+        class="chip"
+        class:aktiv={aktiveDauer === d}
+        onclick={() => aktiveDauer = d}
+      >
+        {d}
+      </button>
+    {/each}
+  </div>
+
   <p class="filter-label">Region</p>
   <div class="chips">
     {#each regionen as r}
@@ -51,7 +71,7 @@
 <p class="treffer">{gefilterteTouren.length} Touren gefunden</p>
 
 {#if gefilterteTouren.length === 0}
-  <p>Keine Touren für diese Filter.</p>
+  <p class="keine">Keine Touren für diese Filter.</p>
 {:else}
   {#each gefilterteTouren as tour}
     <a href="/touren/{tour._id}">
@@ -116,6 +136,13 @@
     margin-bottom: 12px;
   }
 
+  .keine {
+    color: #999;
+    font-size: 14px;
+    text-align: center;
+    padding: 2rem 0;
+  }
+
   a {
     text-decoration: none;
     color: inherit;
@@ -130,16 +157,8 @@
     border-left: 4px solid #2d6a4f;
   }
 
-  h2 {
-    margin: 0 0 6px 0;
-    font-size: 18px;
-  }
-
-  p {
-    margin: 0 0 8px 0;
-    color: #666;
-    font-size: 14px;
-  }
+  h2 { margin: 0 0 6px 0; font-size: 18px; }
+  p { margin: 0 0 8px 0; color: #666; font-size: 14px; }
 
   .badge {
     background: #d8f3dc;

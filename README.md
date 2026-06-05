@@ -82,6 +82,8 @@
 - **Variantenüberblick:** Im Rahmen des Crazy-8s-Prozesses wurden 8 verschiedene Konzeptvarianten skizziert.
 
 - **Skizzen:** Siehe `docs/skizzen/` im Repository (Crazy-8s Übersicht + 3 ausgearbeitete Varianten)
+    ![Crazy-8s Skizzen](docs/skizzen/skizze_crazy8s.png)
+    ![Ausgearbeitete Varianten](docs/skizzen/skizze_varianten.png)
 
   Die 8 Varianten im Überblick:
   1. **Fitness-Slider** — Slider auf der Startseite zur Selbsteinschätzung des Fitnessstands
@@ -95,7 +97,7 @@
 
   Ausgearbeitete Varianten (Seite 2):
   - **Variante A (Fitness-Slider):** Slider auf Startseite mit direkt darunter liegender Tourenliste
-  - **Variante B (Filter-Chips):** Chips für Schwierigkeit, Dauer, Region — mit Echtzeit-Trefferzahl
+  - **Variante B (Filter-Chips):** Chips für Schwierigkeit, Dauer, Region
   - **Variante C (Karte + Badge):** Kartenansicht mit Routenverlauf, Schwierigkeitsbadge und Fitness-Match-Balken
 
 ---
@@ -121,7 +123,7 @@
   6. Tour als erledigt markieren → Formular mit Datum, Sternbewertung und Notiz
   7. Tagebuch zeigt alle absolvierten Touren mit Bewertung
 
-- **Mockup:** _[Figma-URL einfügen]_
+- **Mockup:** (https://www.figma.com/proto/hcxbx9gIWnflLORekuiotr/TrailBuddy-Mockup?node-id=0-1&t=DzfxLSC0SjBNOVO0-1)
 
 ---
 
@@ -186,7 +188,7 @@
   - Können Nutzer ohne Vorwissen intuitiv eine passende Wanderung anhand von Kriterien wie Dauer, Region und Schwierigkeit finden?
   - Enthält die Detailseite alle relevanten Informationen für eine Entscheidung? Sind diese verständlich und gut auffindbar?
 
-- **Vorgehen:** Moderierter Usability-Test (Think-Aloud-Methode), On-site 1:1 mit Testleiter, ca. 10 Minuten Durchführung + 10 Minuten Interview pro Person. Protokollierung via Feedback Grid (während Test) und Issue Map (nach Test).
+- **Vorgehen:** Moderierter Usability-Test, On-site 1:1 mit Testleiter, ca. 10 Minuten Durchführung + 10 Minuten Interview pro Person. Protokollierung via Feedback Grid (während Test) und Issue Map (nach Test).
 
 - **Stichprobe:**
 
@@ -203,9 +205,20 @@
   **Szenario 2 — Tourdetails lesen (TP-02):**
   > «Sie haben eine Tour gefunden und möchten mehr darüber erfahren, bevor Sie sich entscheiden. Verschaffen Sie sich einen Überblick über die wichtigsten Infos der Tour.»
 
+ - **Kennzahlen & Beobachtungen:**
+
+  | Issue | Schweregrad | Testperson |
+  |-------|-------------|------------|
+  | Begriff «Fitness-Level» unklar, Verwechslung mit «Schwierigkeit» | 🔴 Hoch | TP-01, TP-02 |
+  | Keine saisonale Empfehlung vorhanden | 🔴 Hoch | TP-02 |
+  | Kein Dauerfilter vorhanden | 🔴 Hoch | TP-01 |
+  | Technische Kerndaten (Distanz, Dauer, Höhenmeter) zu klein dargestellt | 🟠 Mittel | TP-02 |
+  | Button-Tap-Area zu klein | 🟠 Mittel | TP-01 |
+  | ÖV-Anbindung nicht ersichtlich | 🟡 Tief | TP-02 |
+  | Suchfeld beim ersten Blick nicht sichtbar | 🟡 Tief | TP-01 |
 
 - **Zusammenfassung der Resultate:**
-  Beide Testpersonen fanden den Prototyp visuell ansprechend und konnten grundlegende Abläufe verstehen. TP-01 fand erfolgreich eine passende Tour (ca. 90 Sekunden), bemängelte jedoch den fehlenden Dauerfilter und das schwer auffindbare Suchfeld. TP-02 vermisste auf der Detailseite ein Höhenprofil und die ÖV-Anbindung — beides war für ihn entscheidungsrelevant. Übergreifend war der Begriff «Fitness-Level» beiden Testpersonen unklar und wurde mit «Schwierigkeit» verwechselt.
+  Beide Testpersonen fanden den Prototyp visuell ansprechend und konnten grundlegende Abläufe verstehen. TP-01 fand erfolgreich eine passende Tour (ca. 90 Sekunden), bemängelte jedoch den fehlenden Dauerfilter. TP-02 vermisste eine saisonale Empfehlung zu jeder Tour. Übergreifend war der Begriff «Fitness-Level» beiden Testpersonen unklar und wurde mit «Schwierigkeit» verwechselt.
 
 - **Abgeleitete Verbesserungen:**
 
@@ -214,9 +227,8 @@
   | 🔴 Hoch   | Begriff «Fitness-Level» unklar | Personas umbennenen um Zielgruppe präziser anzusprechen |
   | 🔴 Hoch   | Keine saisonale Empfehlung | Empfohlene Jahreszeit auf Detailseite ergänzen |
   | 🔴 Hoch   | Kein Dauerfilter vorhanden | Schieberegler für Dauer als Filter ergänzen |
-  | 🔴 Hoch   | Höhenprofil auf Detailseite fehlt | Höhenprofil in Detailseite integrieren |
   | 🟠 Mittel | Technische Kerndaten zu klein | Distanz, Dauer, Höhenmeter als prominente Icon-Leiste darstellen |
-  | 🟠 Mittel | Button-Tap-Area zu klein | Tap-Area auf mindestens 44×44px ausweiten |
+  | 🟠 Mittel | Button-Tap-Area zu klein | Tap-Area auf mindestens ausweiten |
   | 🟡 Tief   | ÖV-Anbindung nicht ersichtlich | ÖV-Verbindungen ab nächstem Bahnhof auf Detailseite anzeigen |
   | 🟡 Tief   | Suchfeld nicht sichtbar beim ersten Blick | Suchfeld fix im Header platzieren, immer sichtbar |
 
@@ -253,7 +265,22 @@
 - **Wo umgesetzt:**
   - **Frontend:** `src/routes/profil/+page.svelte` — Personas-Array mit neuen IDs und Beschreibungen
   - **Frontend:** `src/routes/+page.svelte` — Persona-Filter-Logik angepasst
-- **Referenz:** Kap. 3.5, Issue «Begriff Fitness-Level unklar» (TP-01 + TP-02)
+- **Referenz:** Kap. 3.5, Issue «Begriff Fitness-Level unklar» 
+- **Aus Evaluation abgeleitet?:** Ja
+
+### 4.5 Saisonale Empfehlung auf Tourdetail
+- **Beschreibung & Nutzen:** Jede Tour zeigt nun die empfohlene Wandersaison an (z.B. «Sommer», «Frühling – Herbst», «Ganzjährig»). So können Nutzende auf einen Blick einschätzen ob eine Tour zum aktuellen Zeitpunkt geeignet ist — ohne externe Recherche.
+- **Wo umgesetzt:**
+  - **Frontend:** `src/routes/touren/[id]/+page.svelte` — Saison-Box mit gelbem Hintergrund nach der Beschreibung
+  - **Datenbank:** MongoDB Collection `touren` — Feld `saison` bei allen 19 Touren ergänzt
+- **Referenz:** Kap. 3.5, Issue «Keine saisonale Empfehlung vorhanden» 
+- **Aus Evaluation abgeleitet?:** Ja
+
+### 4.6 Dauerfilter auf Tourensuche
+- **Beschreibung & Nutzen:** Die Tourensuche wurde um einen Dauerfilter erweitert. Nutzende können Touren nach Zeitaufwand filtern (1–2h, 2–4h, 4h+) und so schnell passende Touren für ihr verfügbares Zeitbudget finden.
+- **Wo umgesetzt:**
+  - **Frontend:** `src/routes/touren/+page.svelte` — `aktiveDauer`-State und `dauerOk`-Filterlogik
+- **Referenz:** Kap. 3.5, Issue «Kein Dauerfilter vorhanden» 
 - **Aus Evaluation abgeleitet?:** Ja
 ---
 
