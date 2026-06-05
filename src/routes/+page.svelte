@@ -1,61 +1,129 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   let { data } = $props();
 
-  let fitnessLevel = $state(
-    typeof localStorage !== 'undefined'
-      ? parseInt(localStorage.getItem('fitnessLevel') || '3')
-      : 3
-  );
+  let profilEingerichtet = $state(false);
+  let persona = $state('');
+  let fitnessLevel = $state(3);
+  let ueberspringen = $state(false);
 
-  const fitnessLabels = ['', 'Einsteiger', 'Leicht', 'Mittel', 'Fortgeschritten', 'Profi'];
+  const personaEmoji: Record<string, string> = {
+    geniessen: '🌿',
+    sportlich: '🏃',
+    entdecker: '📸',
+    gemutlich: '🧓'
+  };
 
-  function fitnessAendern(e: Event) {
-    fitnessLevel = parseInt((e.target as HTMLInputElement).value);
-    localStorage.setItem('fitnessLevel', String(fitnessLevel));
+  const personaLabel: Record<string, string> = {
+    geniessen: 'Geniesser',
+    sportlich: 'Sportlich',
+    entdecker: 'Entdecker',
+    gemutlich: 'Gemütlich'
+  };
+
+  onMount(() => {
+    profilEingerichtet = localStorage.getItem('profil_eingerichtet') === 'true';
+    persona = localStorage.getItem('persona') || '';
+    fitnessLevel = parseInt(localStorage.getItem('fitnessLevel') || '3');
+    ueberspringen = localStorage.getItem('onboarding_skip') === 'true';
+  });
+
+  function skip() {
+    localStorage.setItem('onboarding_skip', 'true');
+    ueberspringen = true;
   }
 
-  // Nur die ersten 3 Touren anzeigen
-  const letzteTouren = data.touren.slice(0, 3);
+  // Touren passend zur Persona filtern
+  const passendeTouren = $derived(
+    data.touren
+      .filter((t: any) => {
+        if (!persona) return true;
+
+        if (persona === 'gemutlich') {
+          return t.schwierigkeit === 'Einfach';
+        }
+
+        if (persona === 'geniessen') {
+          return fitnessLevel <= 2
+            ? t.schwierigkeit === 'Einfach'
+            : t.schwierigkeit === 'Einfach' || t.schwierigkeit === 'Mittel';
+        }
+
+        if (persona === 'entdecker') {
+          return fitnessLevel <= 2
+            ? t.schwierigkeit === 'Einfach'
+            : t.schwierigkeit === 'Einfach' || t.schwierigkeit === 'Mittel';
+        }
+
+        if (persona === 'sportlich') {
+          return fitnessLevel <= 2
+            ? t.schwierigkeit === 'Einfach' || t.schwierigkeit === 'Mittel'
+            : t.schwierigkeit === 'Mittel' || t.schwierigkeit === 'Schwer';
+        }
+
+        return true;
+      })
+      .slice(0, 3)
+  );
+
+  const letzteTouren = $derived(data.touren.slice(0, 3));
 </script>
 
-<div class="header">
-  <h1>👋 Willkommen</h1>
-  <p class="subtitle">Finde deine perfekte Wandertour</p>
-</div>
-
-<div class="fitness-box">
-  <p class="box-label">Dein Fitnessstand</p>
-  <input
-    type="range"
-    min="1"
-    max="5"
-    value={fitnessLevel}
-    oninput={fitnessAendern}
-    class="slider"
-  />
-  <div class="fitness-info">
-    <span>Einsteiger</span>
-    <span class="fitness-current">{fitnessLabels[fitnessLevel]}</span>
-    <span>Profi</span>
+<!-- Onboarding-Banner -->
+{#if !profilEingerichtet && !ueberspringen}
+  <div class="onboarding-banner">
+    <div class="onboarding-icon">🥾</div>
+    <h2>Willkommen bei TrailBuddy!</h2>
+    <p>Richte dein Profil ein damit wir dir passende Wandertouren empfehlen können. Du kannst dies jederzeit auch später unter <strong>Profil</strong> im Menü anpassen.</p>
+    <a href="/profil" class="btn-profil">Profil einrichten</a>
+    <button class="btn-skip" onclick={skip}>Überspringen</button>
   </div>
-</div>
 
-<div class="section-header">
-  <h2>Zuletzt angesehen</h2>
-  <a href="/touren">Alle anzeigen →</a>
-</div>
+{:else}
+  <!-- Normaler Home-Screen -->
+  <div class="header">
+    {#if persona}
+    <h1>👋 Willkommen!</h1>
+    <p class="subtitle">Hier sind passende Touren für dich</p>
+  {:else}
+    <h1>👋 Willkommen</h1>
+    <p class="subtitle">Finde deine perfekte Wandertour</p>
+  {/if}
+  </div>
 
-{#each letzteTouren as tour}
-  <a href="/touren/{tour._id}">
-    <div class="tour-card">
-      <h3>{tour.name}</h3>
-      <p>📍 {tour.region} · ⏱ {tour.dauer} Min · 🏔 {tour.hoehenmeter}hm</p>
-      <span class="badge">{tour.schwierigkeit}</span>
+  {#if persona}
+    <!-- Passende Touren basierend auf Persona -->
+    <div class="section-header">
+      <h2>Passende Touren</h2>
+      <a href="/touren">Alle anzeigen →</a>
     </div>
-  </a>
-{/each}
+    {#each passendeTouren as tour}
+      <a href="/touren/{tour._id}">
+        <div class="tour-card">
+          <h3>{tour.name}</h3>
+          <p>📍 {tour.region} · ⏱ {tour.dauer} Min · 🏔 {tour.hoehenmeter}hm</p>
+          <span class="badge">{tour.schwierigkeit}</span>
+        </div>
+      </a>
+    {/each}
+  {:else}
+    <!-- Keine Persona: alle Touren -->
+    <div class="section-header">
+      <h2>Zuletzt hinzugefügt</h2>
+      <a href="/touren">Alle anzeigen →</a>
+    </div>
+    {#each letzteTouren as tour}
+      <a href="/touren/{tour._id}">
+        <div class="tour-card">
+          <h3>{tour.name}</h3>
+          <p>📍 {tour.region} · ⏱ {tour.dauer} Min · 🏔 {tour.hoehenmeter}hm</p>
+          <span class="badge">{tour.schwierigkeit}</span>
+        </div>
+      </a>
+    {/each}
+  {/if}
+{/if}
 
-<!-- Bottom Nav -->
 <nav class="bottom-nav">
   <a href="/" class="active">🏠<span>Home</span></a>
   <a href="/touren">🔍<span>Suche</span></a>
@@ -64,40 +132,61 @@
 </nav>
 
 <style>
-  .header { margin-bottom: 24px; }
-
-  h1 { margin: 0 0 4px 0; font-size: 26px; }
-  .subtitle { margin: 0; color: #666; }
-
-  .fitness-box {
+  /* Onboarding */
+  .onboarding-banner {
+    text-align: center;
+    padding: 2rem 1rem;
     background: white;
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 24px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border-radius: 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    margin-top: 1rem;
   }
 
-  .box-label {
-    font-weight: 600;
-    margin: 0 0 12px 0;
-    color: #2d6a4f;
+  .onboarding-icon { font-size: 3rem; margin-bottom: 0.5rem; }
+
+  .onboarding-banner h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.3rem;
+    color: #1b4332;
   }
 
-  .slider {
-    width: 100%;
-    accent-color: #2d6a4f;
-    margin-bottom: 8px;
-  }
-
-  .fitness-info {
-    display: flex;
-    justify-content: space-between;
-    font-size: 12px;
+  .onboarding-banner p {
     color: #666;
+    font-size: 0.9rem;
+    margin: 0 0 1.5rem;
+    line-height: 1.5;
   }
 
-  .fitness-current { font-weight: 600; color: #2d6a4f; }
+  .btn-profil {
+    display: block;
+    background: #2d6a4f;
+    color: white;
+    padding: 14px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
 
+  .btn-profil:hover { background: #1b4332; }
+
+  .btn-skip {
+    background: none;
+    border: none;
+    color: #999;
+    font-size: 0.85rem;
+    cursor: pointer;
+    padding: 8px;
+    text-decoration: underline;
+  }
+
+  /* Header */
+  .header { margin-bottom: 24px; }
+  h1 { margin: 0 0 4px 0; font-size: 24px; }
+  .subtitle { margin: 0; color: #666; font-size: 0.9rem; }
+
+  /* Touren */
   .section-header {
     display: flex;
     justify-content: space-between;
@@ -130,7 +219,7 @@
     font-size: 12px;
   }
 
-  /* Bottom Nav — gleich wie auf allen anderen Pages */
+  /* Bottom Nav */
   .bottom-nav {
     position: fixed;
     bottom: 0; left: 0; right: 0;

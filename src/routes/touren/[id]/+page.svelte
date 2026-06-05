@@ -37,7 +37,7 @@
 
 <div style="padding-bottom: 70px">
 
-  <a href="/touren" class="back">← Zurück</a>
+  <button class="back" onclick={() => history.back()}>← Zurück</button>
 
   <div class="detail">
     <h1>{data.tour.name}</h1>
@@ -132,6 +132,11 @@
     color: #2d6a4f;
     text-decoration: none;
     font-weight: 500;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0;
   }
 
   .detail {
