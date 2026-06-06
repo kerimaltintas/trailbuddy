@@ -313,7 +313,7 @@ src/
   +page.svelte       ← Home-Page mit Onboarding
   +page.server.ts    ← Server-seitiges Laden der Touren
 ```
-- **Commit-Praxis:** Sprechende Commits nach Schema `typ: Beschreibung` (feat, fix, docs, style)
+- **Commit-Praxis:** Sprechende Commits nach Schema `Beschreibung` 
 
 ---
 
