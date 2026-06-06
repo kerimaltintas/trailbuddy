@@ -1,7 +1,5 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import L from 'leaflet';
-  import 'leaflet/dist/leaflet.css';
 
   let { data } = $props();
 
@@ -19,8 +17,11 @@
   let laden = $state(false);
   let mapContainer: HTMLDivElement;
 
-  onMount(() => {
+  onMount(async () => {
     if (!data.tour.koordinaten) return;
+
+    const L = (await import('leaflet')).default;
+    await import('leaflet/dist/leaflet.css');
 
     const map = L.map(mapContainer).setView(
       [data.tour.koordinaten.lat, data.tour.koordinaten.lng],

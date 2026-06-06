@@ -211,7 +211,7 @@
   |-------|-------------|------------|
   | Begriff «Fitness-Level» unklar, Verwechslung mit «Schwierigkeit» | 🔴 Hoch | TP-01, TP-02 |
   | Keine saisonale Empfehlung vorhanden | 🔴 Hoch | TP-02 |
-  | Kein Dauerfilter vorhanden | 🔴 Hoch | TP-01 |
+  | Kein Zeitfilter vorhanden | 🔴 Hoch | TP-01 |
   | Startpunkt auf Karte nicht markiert | 🔴 Hoch | TP-02 |
   | Technische Kerndaten (Distanz, Dauer, Höhenmeter) zu klein dargestellt | 🟠 Mittel | TP-02 |
   | Button-Tap-Area zu klein | 🟠 Mittel | TP-01 |
@@ -227,7 +227,7 @@
   |-----------|---------|-----------|
   | 🔴 Hoch   | Begriff «Fitness-Level» unklar | Personas umbennenen um Zielgruppe präziser anzusprechen |
   | 🔴 Hoch   | Keine saisonale Empfehlung | Empfohlene Jahreszeit auf Detailseite ergänzen |
-  | 🔴 Hoch   | Kein Dauerfilter vorhanden | Schieberegler für Dauer als Filter ergänzen |
+  | 🔴 Hoch   | Kein Zeitfilter vorhanden | Dauer als Filter ergänzen |
   | 🔴 Hoch   | Startpunkt auf Karte nicht markiert | Für jede Tour Startpunkt mit interaktiver Karte ergänzen
   | 🟠 Mittel | Technische Kerndaten zu klein | Distanz, Dauer, Höhenmeter als prominente Icon-Leiste darstellen |
   | 🟠 Mittel | Button-Tap-Area zu klein | Tap-Area auf mindestens ausweiten |
@@ -278,11 +278,11 @@
 - **Referenz:** Kap. 3.5, Issue «Keine saisonale Empfehlung vorhanden» 
 - **Aus Evaluation abgeleitet?:** Ja
 
-### 4.6 Dauerfilter auf Tourensuche
+### 4.6 Zeitfilter auf Tourensuche
 - **Beschreibung & Nutzen:** Die Tourensuche wurde um einen Dauerfilter erweitert. Nutzende können Touren nach Zeitaufwand filtern (1–2h, 2–4h, 4h+) und so schnell passende Touren für ihr verfügbares Zeitbudget finden.
 - **Wo umgesetzt:**
   - **Frontend:** `src/routes/touren/+page.svelte` — `aktiveDauer`-State und `dauerOk`-Filterlogik
-- **Referenz:** Kap. 3.5, Issue «Kein Dauerfilter vorhanden» 
+- **Referenz:** Kap. 3.5, Issue «Kein Zeitfilter vorhanden» 
 - **Aus Evaluation abgeleitet?:** Ja
 
 ### 4.7 Interaktive Karte auf Tourdetail
