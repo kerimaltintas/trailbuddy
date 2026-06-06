@@ -116,7 +116,7 @@
 
 - **End-to-End-Ablauf:**
   1. Nutzer öffnet App → Onboarding-Banner mit Hinweis zur Profil-Einrichtung
-  2. Profil einrichten: Persona wählen (Geniesser / Sportlich / Entdecker / Gemütlich) + Fitnessstand setzen → Speichern
+  2. Profil einrichten: Persona wählen 
   3. Home zeigt personalisierte Tourenempfehlungen basierend auf Persona + Fitnessstand
   4. Nutzer wechselt zu «Suche» → Filter nach Schwierigkeit und Region setzen
   5. Tour aus der Liste auswählen → Detailansicht mit Fitness-Match-Balken
@@ -212,13 +212,14 @@
   | Begriff «Fitness-Level» unklar, Verwechslung mit «Schwierigkeit» | 🔴 Hoch | TP-01, TP-02 |
   | Keine saisonale Empfehlung vorhanden | 🔴 Hoch | TP-02 |
   | Kein Dauerfilter vorhanden | 🔴 Hoch | TP-01 |
+  | Startpunkt auf Karte nicht markiert | 🔴 Hoch | TP-02 |
   | Technische Kerndaten (Distanz, Dauer, Höhenmeter) zu klein dargestellt | 🟠 Mittel | TP-02 |
   | Button-Tap-Area zu klein | 🟠 Mittel | TP-01 |
   | ÖV-Anbindung nicht ersichtlich | 🟡 Tief | TP-02 |
   | Suchfeld beim ersten Blick nicht sichtbar | 🟡 Tief | TP-01 |
 
 - **Zusammenfassung der Resultate:**
-  Beide Testpersonen fanden den Prototyp visuell ansprechend und konnten grundlegende Abläufe verstehen. TP-01 fand erfolgreich eine passende Tour (ca. 90 Sekunden), bemängelte jedoch den fehlenden Dauerfilter. TP-02 vermisste eine saisonale Empfehlung zu jeder Tour. Übergreifend war der Begriff «Fitness-Level» beiden Testpersonen unklar und wurde mit «Schwierigkeit» verwechselt.
+  Beide Testpersonen fanden den Prototyp visuell ansprechend und konnten grundlegende Abläufe verstehen. TP-01 fand erfolgreich eine passende Tour (ca. 90 Sekunden), bemängelte jedoch den fehlenden Dauerfilter. TP-02 vermisste eine saisonale Empfehlung zu jeder Tour wie auch einen sichtbaren Startpunkt auf einer Karte. Übergreifend war der Begriff «Fitness-Level» beiden Testpersonen unklar und wurde mit «Schwierigkeit» verwechselt.
 
 - **Abgeleitete Verbesserungen:**
 
@@ -227,6 +228,7 @@
   | 🔴 Hoch   | Begriff «Fitness-Level» unklar | Personas umbennenen um Zielgruppe präziser anzusprechen |
   | 🔴 Hoch   | Keine saisonale Empfehlung | Empfohlene Jahreszeit auf Detailseite ergänzen |
   | 🔴 Hoch   | Kein Dauerfilter vorhanden | Schieberegler für Dauer als Filter ergänzen |
+  | 🔴 Hoch   | Startpunkt auf Karte nicht markiert | Für jede Tour Startpunkt mit interaktiver Karte ergänzen
   | 🟠 Mittel | Technische Kerndaten zu klein | Distanz, Dauer, Höhenmeter als prominente Icon-Leiste darstellen |
   | 🟠 Mittel | Button-Tap-Area zu klein | Tap-Area auf mindestens ausweiten |
   | 🟡 Tief   | ÖV-Anbindung nicht ersichtlich | ÖV-Verbindungen ab nächstem Bahnhof auf Detailseite anzeigen |
@@ -281,6 +283,14 @@
 - **Wo umgesetzt:**
   - **Frontend:** `src/routes/touren/+page.svelte` — `aktiveDauer`-State und `dauerOk`-Filterlogik
 - **Referenz:** Kap. 3.5, Issue «Kein Dauerfilter vorhanden» 
+- **Aus Evaluation abgeleitet?:** Ja
+
+### 4.7 Interaktive Karte auf Tourdetail
+- **Beschreibung & Nutzen:** Jede Tourdetail-Seite zeigt nun eine interaktive Karte mit dem Startpunkt der Tour. Nutzende können den genauen Standort auf der Karte sehen und einschätzen wo die Tour beginnt ohne externe App öffnen zu müssen.
+- **Wo umgesetzt:**
+  - **Frontend:** `src/routes/touren/[id]/+page.svelte` — Leaflet.js Karte mit OpenStreetMap
+  - **Datenbank:** MongoDB Collection `touren` — Feld `koordinaten` mit `lat` und `lng` bei allen Touren ergänzt
+- **Referenz:** Kap. 3.5, Issue «Startpunkt auf Karte nicht markiert»
 - **Aus Evaluation abgeleitet?:** Ja
 ---
 

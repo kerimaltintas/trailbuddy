@@ -1,4 +1,8 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
+  import L from 'leaflet';
+  import 'leaflet/dist/leaflet.css';
+
   let { data } = $props();
 
   const fitnessLevel = typeof localStorage !== 'undefined'
@@ -13,6 +17,34 @@
   let datum = $state(new Date().toISOString().split('T')[0]);
   let gespeichert = $state(false);
   let laden = $state(false);
+  let mapContainer: HTMLDivElement;
+
+  onMount(() => {
+    if (!data.tour.koordinaten) return;
+
+    const map = L.map(mapContainer).setView(
+      [data.tour.koordinaten.lat, data.tour.koordinaten.lng],
+      13
+    );
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    const icon = L.divIcon({
+      html: '🥾',
+      className: 'custom-marker',
+      iconSize: [30, 30]
+    });
+
+    L.marker(
+      [data.tour.koordinaten.lat, data.tour.koordinaten.lng],
+      { icon }
+    )
+      .addTo(map)
+      .bindPopup(`<b>${data.tour.name}</b>`)
+      .openPopup();
+  });
 
   async function eintragSpeichern() {
     laden = true;
@@ -71,6 +103,13 @@
     </div>
 
     <p class="beschreibung">{data.tour.beschreibung}</p>
+
+    {#if data.tour.koordinaten}
+      <div class="karte-box">
+        <p class="karte-label">Standort</p>
+        <div bind:this={mapContainer} class="karte"></div>
+      </div>
+    {/if}
 
     {#if data.tour.saison}
       <div class="saison-box">
@@ -203,6 +242,28 @@
 
   .match-percent { margin: 0; font-size: 13px; color: #2d6a4f; }
   .beschreibung { color: #444; line-height: 1.6; margin-bottom: 20px; }
+
+  .karte-box { margin-bottom: 20px; }
+
+  .karte-label {
+    font-size: 11px;
+    color: #999;
+    text-transform: uppercase;
+    margin: 0 0 8px;
+  }
+
+  .karte {
+    height: 200px;
+    border-radius: 12px;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  :global(.custom-marker) {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+  }
 
   .saison-box {
     display: flex;
